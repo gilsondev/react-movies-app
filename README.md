@@ -2,6 +2,7 @@
 
 Project based on video [Movies App - React Project](https://www.youtube.com/watch?v=sZ0bZGfg_m4) of Florin Pop.
 
+![Screenshot](./screenshot.png)
 
 ## API Stuff
 
