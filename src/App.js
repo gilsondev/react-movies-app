@@ -1,25 +1,53 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import Movie from "./components/Movie";
+
+const FEATURED_API =
+  "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=7ecd0b11bc4cd387a22b43cb37086584";
+const SEARCH_API =
+  "https://api.themoviedb.org/3/search/movie?&api_key=7ecd0b11bc4cd387a22b43cb37086584&query=";
 
 function App() {
+  const [movies, setMovies] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleOnSubmit = (event) => {
+    event.preventDefault();
+
+    if (searchTerm) {
+      fetch(`${SEARCH_API}${searchTerm}`)
+        .then((res) => res.json())
+        .then((data) => setMovies(data.results));
+    }
+  };
+
+  const handleOnChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  useEffect(() => {
+    fetch(FEATURED_API)
+      .then((res) => res.json())
+      .then((data) => setMovies(data.results));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <>
+      <header>
+        <form onSubmit={handleOnSubmit}>
+          <input
+            type="search"
+            className="search"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={handleOnChange}
+          />
+        </form>
       </header>
-    </div>
+      <div className="movie-container">
+        {movies.length > 0 &&
+          movies.map((movie) => <Movie key={movie.id} {...movie} />)}
+      </div>
+    </>
   );
 }
 
